@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,6 +22,7 @@ public class EmpleadoDAO {
 	private ConexionBD conexion;
 	private Connection con;
 	private Statement sentencia;
+	private PreparedStatement sentenciaPrep;
 	private ResultSet resultado;
 	
 	
@@ -81,7 +83,28 @@ public class EmpleadoDAO {
 			
 		}
 		return lista;
+
+	}
+	
+	public void insertar(Empleado e) {
 		
+		con=this.conexion.getConexion();
+		try {
+			String consulta= "insert into empleados (cod_empleado, cod_departamento, telefono,\r\n"
+					+ " fecha_nacimiento, fecha_ingreso, salario,\r\n"
+					+ " comision, num_hijos, nombre)\r\n"
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			
+			sentenciaPrep=con.prepareStatement(consulta);
+			
+			// incializamos la sentencia preparada indicando porque valor debe sustituir 
+			// las interrogaciones
+			sentenciaPrep.setInt(1, e.getCodEmpleado());
+			sentenciaPrep.setInt(2, e.getCodDpto());
+			
+		}
 		
 	}
+	
+	
 }

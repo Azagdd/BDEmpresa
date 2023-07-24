@@ -189,6 +189,7 @@ public class DialogoInsertar extends JDialog {
 			Empleado e = new Empleado(codEmp, codDpto, tfno, 
 					Date.valueOf(fechaIngreso), fechaNac, salario, comision, 
 					numHijos, nombre);
+			
 		} catch (ParseException e) {
 			JOptionPane.showMessageDialog(contentPanel,
 					"debe introducir una fecha correcta");
