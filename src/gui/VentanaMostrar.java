@@ -52,7 +52,7 @@ public class VentanaMostrar extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		contentPane.setLayout(new MigLayout("", "[grow]", "[][grow][]"));
+		contentPane.setLayout(new MigLayout("", "[grow]", "[][grow][][]"));
 		
 		JLabel lblNewLabel = new JLabel("Listado de Empleados:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 22));
@@ -84,13 +84,16 @@ public class VentanaMostrar extends JFrame {
 		});
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton = new JButton("Mostrar Datos:");
+		JButton btnNewButton = new JButton("Mostrar Datos");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mostrarDatos();
 			}
 		});
-		contentPane.add(btnNewButton, "cell 0 2,alignx center");
+		contentPane.add(btnNewButton, "flowx,cell 0 2,alignx center");
+		
+		JButton btnNewButton_1 = new JButton("Nuevo Empleado");
+		contentPane.add(btnNewButton_1, "cell 0 2");
 	}
 
 	protected void mostrarDatos() {
