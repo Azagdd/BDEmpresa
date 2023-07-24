@@ -169,6 +169,45 @@ public class EmpleadoDAO {
 		}
 		return res;
 	}
+	
+	
+	public int editar(Empleado e) throws SQLException {
+		int res=0;
+		con=this.conexion.getConexion();
+		try {
+			String consulta= "UPDATE empleados\r\n"
+					+ "SET cod_departamento = ?, telefono = ?,\r\n"
+					+ "fecha_nacimiento = ?, fecha_ingreso = ?,\r\n"
+					+ "salario = ?, comision = ?, num_hijos = ?,\r\n"
+					+ "nombre = ? \r\n"
+					+ "WHERE cod_empleado = ?";
+			
+			sentenciaPrep=con.prepareStatement(consulta);
+			
+			// incializamos la sentencia preparada indicando porque valor debe sustituir 
+			// las interrogaciones
+			sentenciaPrep.setInt(1, e.getCodDpto());
+			sentenciaPrep.setInt(2, e.getTfno());
+			sentenciaPrep.setDate(3, e.getFechaNaciemiento());
+			sentenciaPrep.setDate(4, e.getFechaingreso());
+			sentenciaPrep.setDouble(5, e.getSalario());
+			sentenciaPrep.setDouble(6, e.getComision());
+			sentenciaPrep.setInt(7, e.getNumHijos());
+			sentenciaPrep.setString(8, e.getNombre());
+			sentenciaPrep.setInt(9, e.getCodEmpleado());
+			
+			res = sentenciaPrep.executeUpdate();
+			
+			
+		} catch (SQLException e1) {
+			System.out.println("Error al editar "+e1.getMessage());
+			throw e1;
+		} finally {
+			sentenciaPrep.close();
+			conexion.desconectar();
+		}
+		return res;
+	}
 
 	public int eliminarEmpleado(int codEmp) throws SQLException {
 		int res=0;
