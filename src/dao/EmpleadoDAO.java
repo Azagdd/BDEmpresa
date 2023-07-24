@@ -86,6 +86,54 @@ public class EmpleadoDAO {
 
 	}
 	
+	public Empleado getEmpleado(int codEmp) {
+		Empleado emp=null;
+		// Conectamos con la base de datos
+		con = this.conexion.getConexion();
+		
+		String consulta = "select * from empleados where cod_empleado = "+codEmp;
+		
+		try {
+			// Crea el objeto Statement con el que se pueden lanzar consultas
+			sentencia = con.createStatement();
+			// Se ejecuta la consulta y se recoge el ResultSet (resultado)
+			resultado = sentencia.executeQuery(consulta);
+			
+			// Hacemos un bucle para recorrer el cursor con los resultados
+			// next devuelve true mientras haya datos, false en caso contrario
+			if(resultado.next()) {
+				
+				// recogemos todos los datos invocando a los método  getters correspondientes
+				codEmp = resultado.getInt("cod_empleado");
+				int codDpto = resultado.getInt("cod_departamento");
+				int tfno = resultado.getInt("telefono");
+				Date fechaNac = resultado.getDate("fecha_nacimiento");
+				Date fechaIngreso = resultado.getDate("fecha_ingreso");
+				double comision = resultado.getDouble("comision");
+				int numHijos= resultado.getInt("num_hijos");
+				String nombre = resultado.getString("nombre");
+				
+				// Instanciamos el objeto de tipo Empleado
+				emp= new Empleado(codEmp, codDpto, tfno, fechaIngreso, fechaNac,
+						tfno, comision, numHijos, nombre);
+				
+			}
+		} catch (SQLException e) {
+			System.out.println("Error en la consulta "+e.getMessage());
+		} finally {
+			try {
+				resultado.close();
+				sentencia.close();
+				conexion.desconectar();
+			} catch (SQLException e) {
+				System.out.println("error liberando recursos. " + e.getMessage());
+			}
+			
+		}
+		return emp;
+
+	}
+	
 	public int insertar(Empleado e) throws SQLException {
 		int res=0;
 		con=this.conexion.getConexion();
@@ -120,6 +168,31 @@ public class EmpleadoDAO {
 			conexion.desconectar();
 		}
 		return res;
+	}
+
+	public int eliminarEmpleado(int codEmp) throws SQLException {
+		int res=0;
+		con=this.conexion.getConexion();
+		try {
+			String consulta= "delete from empleados where cod_empleado=?";
+			
+			sentenciaPrep=con.prepareStatement(consulta);
+			
+			// incializamos la sentencia preparada indicando porque valor debe sustituir 
+			// las interrogaciones
+			sentenciaPrep.setInt(1, codEmp);
+
+			res = sentenciaPrep.executeUpdate();
+	
+		} catch (SQLException e1) {
+			System.out.println("Error al eliminar "+e1.getMessage());
+			throw e1;
+		} finally {
+			sentenciaPrep.close();
+			conexion.desconectar();
+		}
+		return res;
+		
 	}
 	
 	

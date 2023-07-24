@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
@@ -18,6 +20,7 @@ import clases.Empleado;
 import dao.EmpleadoDAO;
 
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
@@ -47,7 +50,7 @@ public class VentanaMostrar extends JFrame {
 	 */
 	public VentanaMostrar() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 508, 308);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -99,6 +102,61 @@ public class VentanaMostrar extends JFrame {
 			}
 		});
 		contentPane.add(btnNewButton_1, "cell 0 2");
+		
+		JButton btnNewButton_2 = new JButton("Eliminar Empleado");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarEmpleado();
+			}
+		});
+		contentPane.add(btnNewButton_2, "cell 0 2");
+		
+		JButton btnNewButton_3 = new JButton("Editar Empleado");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mostrarEditar();
+			}
+		});
+		contentPane.add(btnNewButton_3, "cell 0 2");
+	}
+
+	protected void mostrarEditar() {
+		
+		DialogoEditar dialogoIns = new DialogoEditar();
+		dialogoIns.setModal(true);
+		
+		int seleccionada = table.getSelectedRow();
+		if (seleccionada==-1) {
+			JOptionPane.showMessageDialog(contentPane,
+					"debe seleccionar un empleado a borrar");
+			return;
+		}
+		
+		int codEmp= (int) table.getValueAt(seleccionada, 0);
+		dialogoIns.inicializar(codEmp);
+		dialogoIns.setVisible(true);
+	}
+
+	protected void eliminarEmpleado() {
+		int seleccionada = table.getSelectedRow();
+		if (seleccionada==-1) {
+			JOptionPane.showMessageDialog(contentPane,
+					"debe seleccionar un empleado a borrar");
+			return;
+		}
+		
+		int codEmp= (int) table.getValueAt(seleccionada, 0);
+		
+		EmpleadoDAO daoEmp = new EmpleadoDAO();
+		try {
+			daoEmp.eliminarEmpleado(codEmp);
+			mostrarDatos();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(contentPane,
+					"Error al eliminar el empleado");
+		}
+		
+		
 	}
 
 	protected void insertar() {
