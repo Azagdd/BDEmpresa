@@ -45,6 +45,7 @@ public class ConexionBD {
 	public void desconectar() {
 		try {
 			this.conexion.close();
+			this.conexion=null;
 		} catch (SQLException e) {
 			System.out.println("Error liberando la conexión.");
 			e.printStackTrace();

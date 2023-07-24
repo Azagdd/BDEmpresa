@@ -93,7 +93,19 @@ public class VentanaMostrar extends JFrame {
 		contentPane.add(btnNewButton, "flowx,cell 0 2,alignx center");
 		
 		JButton btnNewButton_1 = new JButton("Nuevo Empleado");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				insertar();
+			}
+		});
 		contentPane.add(btnNewButton_1, "cell 0 2");
+	}
+
+	protected void insertar() {
+		DialogoInsertar dialogoIns = new DialogoInsertar();
+		dialogoIns.setModal(true);
+		dialogoIns.setVisible(true);
+		
 	}
 
 	protected void mostrarDatos() {

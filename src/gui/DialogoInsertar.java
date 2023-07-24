@@ -6,10 +6,10 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,6 +22,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
 import clases.Empleado;
+import dao.EmpleadoDAO;
 import net.miginfocom.swing.MigLayout;
 
 public class DialogoInsertar extends JDialog {
@@ -160,6 +161,11 @@ public class DialogoInsertar extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						setVisible(false);
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
@@ -175,24 +181,32 @@ public class DialogoInsertar extends JDialog {
 			
 			int tfno = Integer.parseInt(txtTfno.getText());
 			
-			DateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+			//DateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+			DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			
 			double salario = Double.parseDouble(txtSalario.getText());
 			double comision = Double.parseDouble(txtComision.getText());
 			int numHijos = (int) spinner.getValue();
 		
-			Date fechaNac = (Date) formateador.parse(txtFechaNac.getText());
+			Date fechaNac = Date.valueOf(LocalDate.parse(txtFechaNac.getText(), formateador));
 			
 			LocalDate fechaIngreso= LocalDate.now();
 			
 			
-			Empleado e = new Empleado(codEmp, codDpto, tfno, 
+			Empleado emp = new Empleado(codEmp, codDpto, tfno, 
 					Date.valueOf(fechaIngreso), fechaNac, salario, comision, 
 					numHijos, nombre);
 			
-		} catch (ParseException e) {
+			EmpleadoDAO daoEmp = new EmpleadoDAO();
+			daoEmp.insertar(emp);
+			setVisible(false);
+			
+		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(contentPanel,
-					"debe introducir una fecha correcta");
+					"No se ha podido insertar.");
+		} catch (DateTimeParseException e) {
+			JOptionPane.showMessageDialog(contentPanel,
+					"debe introducir una fecha correcta. "+e.getMessage());
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(contentPanel, 
 					"Compruebe los datos, tienen un formato incorrecto");

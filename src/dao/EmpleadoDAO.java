@@ -86,8 +86,8 @@ public class EmpleadoDAO {
 
 	}
 	
-	public void insertar(Empleado e) {
-		
+	public int insertar(Empleado e) throws SQLException {
+		int res=0;
 		con=this.conexion.getConexion();
 		try {
 			String consulta= "insert into empleados (cod_empleado, cod_departamento, telefono,\r\n"
@@ -101,9 +101,25 @@ public class EmpleadoDAO {
 			// las interrogaciones
 			sentenciaPrep.setInt(1, e.getCodEmpleado());
 			sentenciaPrep.setInt(2, e.getCodDpto());
+			sentenciaPrep.setInt(3, e.getTfno());
+			sentenciaPrep.setDate(4, e.getFechaNaciemiento());
+			sentenciaPrep.setDate(5, e.getFechaingreso());
+			sentenciaPrep.setDouble(6, e.getSalario());
+			sentenciaPrep.setDouble(7, e.getComision());
+			sentenciaPrep.setInt(8, e.getNumHijos());
+			sentenciaPrep.setString(9, e.getNombre());
 			
+			res = sentenciaPrep.executeUpdate();
+			
+			
+		} catch (SQLException e1) {
+			System.out.println("Error al insertar "+e1.getMessage());
+			throw e1;
+		} finally {
+			sentenciaPrep.close();
+			conexion.desconectar();
 		}
-		
+		return res;
 	}
 	
 	
